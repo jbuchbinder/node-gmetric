@@ -1,7 +1,7 @@
 {
     "name": "gmetric",
     "description": "Ganglia gmetric submission for node.js",
-    "version": "0.1.0",
+    "version": "0.0.1",
     "author": "Jeff Buchbinder",
     "main": "./index.js",
     "directories": { "lib": "./lib" },
