@@ -3,6 +3,12 @@
     "description": "Ganglia gmetric submission for node.js",
     "version": "0.1.0",
     "author": "Jeff Buchbinder",
+    "main": "./index.js",
+    "directories": { "lib": "./lib" },
+    "repository": {
+      "type":"git",
+      "url":"https://github.com/jbuchbinder/node-gmetric.git"
+    },
     "dependencies": {},
     "devDependencies": {}
 }

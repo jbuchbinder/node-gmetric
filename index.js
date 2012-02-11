@@ -1,1 +1,1 @@
-module.exports = require('gmetric');
+module.exports = require('./lib/gmetric');
