@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png)](http://travis-ci.org/jbuchbinder/node-gmetric)
 NODE-GMETRIC
 ============
 
