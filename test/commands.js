@@ -39,7 +39,8 @@ describe('commands', function() {
   it("should be able to properly pack xdr strings", function(done){
     var teststring = "thebeststring";
     var buffer = new Buffer(20);
-    cmds.pack_string(buffer, teststring, 0);
+    var int_pos = cmds.pack_string(buffer, teststring, 0);
+    int_pos.should.equal(20);
     buffer.readInt32BE(0).should.equal(teststring.length);
     buffer.toString('utf-8', 4, 17).should.equal(teststring);
     buffer[17].should.equal(0);
