@@ -10,11 +10,23 @@ describe('gmetric', function() {
     done();
   });
 
+  it("should have a list of supported types", function(done){
+    ("int8" in Gmetric.supported_types).should.equal(true);
+    ("uint8" in Gmetric.supported_types).should.equal(true);
+    ("int16" in Gmetric.supported_types).should.equal(true);
+    ("uint16" in Gmetric.supported_types).should.equal(true);
+    ("int32" in Gmetric.supported_types).should.equal(true);
+    ("uint32" in Gmetric.supported_types).should.equal(true);
+    ("float" in Gmetric.supported_types).should.equal(true);
+    ("double" in Gmetric.supported_types).should.equal(true);
+    ("int12" in Gmetric.supported_types).should.equal(false);
+    done();
+  });
+
   it("should be able to create a new gmetric object", function(done){
-    var gmetric = new Gmetric('127.0.0.1', 8659, true);
+    var gmetric = new Gmetric('127.0.0.1', 8659);
     gmetric._ganglia_host.should.equal('127.0.0.1');
     gmetric._ganglia_port.should.equal(8659);
-    gmetric._ganglia_spoof.should.equal(true);
     (typeof gmetric.pack_int === 'function').should.equal(true);
     (typeof gmetric.pack_bool === 'function').should.equal(true);
     (typeof gmetric.pack_string === 'function').should.equal(true);
@@ -25,7 +37,7 @@ describe('gmetric', function() {
     var teststring = 'awesome';
     var buffer = new Buffer(11);
     var pos = buffer.write(teststring);
-    var gmetric = new Gmetric('127.0.0.1', 8659, true);
+    var gmetric = new Gmetric('127.0.0.1', 8659);
     var int_pos = gmetric.pack_int(buffer, 33, pos);
     int_pos.should.equal(11);
     buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
@@ -39,7 +51,7 @@ describe('gmetric', function() {
     var teststring = 'awesome';
     var buffer = new Buffer(11);
     var pos = buffer.write(teststring);
-    var gmetric = new Gmetric('127.0.0.1', 8659, true);
+    var gmetric = new Gmetric('127.0.0.1', 8659);
     gmetric.pack_int(buffer, undefined, pos);
     buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
     buffer.readInt32BE(teststring.length).should.equal(0);
@@ -52,7 +64,7 @@ describe('gmetric', function() {
     var teststring = 'awesome';
     var buffer = new Buffer(11);
     var pos = buffer.write(teststring);
-    var gmetric = new Gmetric('127.0.0.1', 8659, true);
+    var gmetric = new Gmetric('127.0.0.1', 8659);
     var int_pos = gmetric.pack_bool(buffer, true, pos);
     buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
     int_pos.should.equal(11);
@@ -65,7 +77,7 @@ describe('gmetric', function() {
   it("should be able to properly pack xdr strings", function(done){
     var teststring = 'thebeststring';
     var buffer = new Buffer(20);
-    var gmetric = new Gmetric('127.0.0.1', 8659, true);
+    var gmetric = new Gmetric('127.0.0.1', 8659);
     var int_pos = gmetric.pack_string(buffer, teststring, 0);
     int_pos.should.equal(20);
     buffer.readInt32BE(0).should.equal(teststring.length);
@@ -73,6 +85,119 @@ describe('gmetric', function() {
     buffer[17].should.equal(0);
     buffer[18].should.equal(0);
     buffer[19].should.equal(0);
+    done();
+  });
+
+  it("should throw an error with an incomplete metric", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var empty_metric = {};
+    (function(){
+      gmetric.pack(empty_metric)
+    }).should.Throw(Error);
+    done();
+  });
+
+  it("should throw an error with missing metric name", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var broken_metric = { value: 10, type: 'int32' };
+    (function(){
+      gmetric.pack(broken_metric)
+    }).should.Throw(Error);
+    done();
+  });
+
+  it("should throw an error with missing metric value", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var broken_metric = { name: 'bestmetric', type: 'int32' };
+    (function(){
+      gmetric.pack(broken_metric)
+    }).should.Throw(Error);
+    done();
+  });
+
+  it("should throw an error with missing metric type", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var broken_metric = { name: 'bestmetric', value: 10 };
+    (function(){
+      gmetric.pack(broken_metric)
+    }).should.Throw(Error);
+    done();
+  });
+
+  it("should throw an error on an invalid metric type", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var broken_metric = { name: 'bestmetric', value: 10, type: 'brainslug' };
+    (function(){
+      gmetric.pack(broken_metric)
+    }).should.Throw(Error);
+    done();
+  });
+
+  it("should have sane defaults for the gmetric packet", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var ex_metric = { name: 'bestmetric', value: 10, type: 'int32' };
+    var packet = gmetric.pack(ex_metric);
+    packet.hostname.should.equal('');
+    packet.group.should.equal('');
+    packet.spoof.should.equal(0);
+    packet.units.should.equal('');
+    packet.slope.should.equal('both');
+    packet.tmax.should.equal(60);
+    packet.dmax.should.equal(0);
+    done();
+  });
+
+  it("should be able to merge spoofed gmetric packets", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var spoofed_metric = {
+        hostname: 'awesomehost.mydomain.com',
+        group: 'testgroup',
+        spoof: true,
+        units: 'widgets/sec',
+        slope: 'positive',
+
+        name: 'bestmetric',
+        value: 10,
+        type: 'int32'
+    };
+    var packet = gmetric.pack(spoofed_metric);
+    packet.hostname.should.equal('awesomehost.mydomain.com');
+    packet.group.should.equal('testgroup');
+    packet.spoof.should.equal(1);
+    packet.units.should.equal('widgets/sec');
+    packet.slope.should.equal('positive');
+    packet.tmax.should.equal(60);
+    packet.dmax.should.equal(0);
+    packet.name.should.equal('bestmetric');
+    packet.value.should.equal(10);
+    packet.type.should.equal('int32');
+    done();
+  });
+
+  it("should be able to merge non-spoofed gmetric packets", function(done){
+    var gmetric = new Gmetric('127.0.0.1', 8659);
+    var spoofed_metric = {
+        hostname: 'awesomehost.mydomain.com',
+        group: 'testgroup',
+        spoof: false,
+        units: 'widgets/sec',
+        slope: 'positive',
+
+        name: 'bestmetric',
+        value: 10,
+        type: 'int32'
+    };
+    var packet = gmetric.pack(spoofed_metric);
+    packet.hostname.should.equal('awesomehost.mydomain.com');
+    packet.group.should.equal('testgroup');
+    packet.spoof.should.equal(0);
+    packet.units.should.equal('widgets/sec');
+    packet.slope.should.equal('positive');
+    packet.tmax.should.equal(60);
+    packet.dmax.should.equal(0);
+    packet.name.should.equal('bestmetric');
+    packet.value.should.equal(10);
+    packet.type.should.equal('int32');
     done();
   });
 });
