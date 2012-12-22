@@ -23,6 +23,12 @@ describe('gmetric', function() {
     done();
   });
 
+  it("should generate the fill length for an xdr string", function(done) {
+    var gmetric = new Gmetric();
+    gmetric.string_fill_length('awesome').should.equal(3);
+    done();
+  });
+
   it("should be able to create a new gmetric object", function(done){
     var gmetric = new Gmetric();
     (typeof gmetric.pack_int === 'function').should.equal(true);
