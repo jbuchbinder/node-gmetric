@@ -1,3 +1,5 @@
+var dgram = require('dgram');
+
 var Gmetric = require('../lib/gmetric');
 
 describe('gmetric', function() {
@@ -164,59 +166,110 @@ describe('gmetric', function() {
   it("should be able to create a gmetric meta packet", function(done){
     var gmetric = new Gmetric();
     var metric = {
-        hostname: 'awesomehost.mydomain.com',
-        group: 'testgroup',
-        spoof: true,
-        units: 'widgets/sec',
-        slope: 'positive',
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
 
-        name: 'bestmetric',
-        value: 10,
-        type: 'int32'
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
     };
     var meta = gmetric.create_meta(metric);
-    meta.length.should.equal(148);
+    meta.readInt32BE(0).should.equal(128);
+    meta.length.should.equal(147);
     done();
   });
 
   it("should be able to create a gmetric data packet", function(done){
     var gmetric = new Gmetric();
     var metric = {
-        hostname: 'awesomehost.mydomain.com',
-        group: 'testgroup',
-        spoof: true,
-        units: 'widgets/sec',
-        slope: 'positive',
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
 
-        name: 'bestmetric',
-        value: 10,
-        type: 'int32'
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
     };
     var data = gmetric.create_data(metric);
-    var buffer = data.buffer;
-    buffer.readInt32BE(0).should.equal(133);
-    buffer.readInt32BE(4).should.equal(metric.hostname.length);
-    data.length.should.equal(66);
+    data.readInt32BE(0).should.equal(133);
+    data.readInt32BE(4).should.equal(metric.hostname.length);
+    data.length.should.equal(65);
     done();
   });
 
   it("should be able to create a simple gmetric packet", function(done){
     var gmetric = new Gmetric();
     var metric = {
-        hostname: 'awesomehost.mydomain.com',
-        group: 'testgroup',
-        spoof: true,
-        units: 'widgets/sec',
-        slope: 'positive',
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
 
-        name: 'bestmetric',
-        value: 10,
-        type: 'int32'
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
     };
     var packet = gmetric.pack(metric);
-    packet.length.should.equal(214);
+    packet.meta.length.should.equal(147);
+    packet.data.length.should.equal(65);
     done();
   });
+
+  it("should be able to send a simple udp packet", function(done){
+    var server = dgram.createSocket('udp4');
+    var gmetric = new Gmetric();
+
+    server.on('message', function(msg, rinfo) {
+      msg.toString().should.equal('awesomebuffer');
+      server.close();
+    });
+    server.on('listening', function(){
+      var buffer = new Buffer('awesomebuffer');
+      gmetric.send_packet('127.0.0.1', 43278, buffer);
+    });
+    server.on('close', function() {
+      done();
+    });
+    server.bind(43278);
+  });
+
+  it("should be able to parse a gmetric packet");
+
+  it("should be able to send a complete gmetric packet");
+  // , function(done){
+  //   var server = dgram.createSocket('udp4');
+  //   var gmetric = new Gmetric();
+
+  //   server.on('message', function(msg, rinfo) {
+  //     var msg_type = msg.readInt32BE(0);
+  //     server.close();
+  //   });
+  //   server.on('listening', function(){
+  //     var metric = {
+  //       hostname: 'awesomehost.mydomain.com',
+  //       group: 'testgroup',
+  //       spoof: true,
+  //       units: 'widgets/sec',
+  //       slope: 'positive',
+
+  //       name: 'bestmetric',
+  //       value: 10,
+  //       type: 'int32'
+  //     };
+
+  //     gmetric.send('127.0.0.1', 43278, metric);
+  //   });
+  //   server.on('close', function() {
+  //     done();
+  //   });
+  //   server.bind(43278);
+  // });
 
   // it("should be able to generate a spoofed packet", function(done){
   //   var gmetric = new Gmetric();
