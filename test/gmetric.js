@@ -198,7 +198,7 @@ describe('gmetric', function() {
     var data = gmetric.create_data(metric);
     data.readInt32BE(0).should.equal(133);
     data.readInt32BE(4).should.equal(metric.hostname.length);
-    data.length.should.equal(65);
+    data.length.should.equal(74);
     done();
   });
 
@@ -217,9 +217,15 @@ describe('gmetric', function() {
     };
     var packet = gmetric.pack(metric);
     packet.meta.length.should.equal(147);
-    packet.data.length.should.equal(65);
+    packet.data.length.should.equal(74);
     done();
   });
+
+  it("should be able to parse a data packet");
+
+  it("should be able to parse a meta packet");
+
+  it("should be able to parse a gmetric packet");
 
   it("should be able to send a simple udp packet", function(done){
     var server = dgram.createSocket('udp4');
@@ -239,9 +245,37 @@ describe('gmetric', function() {
     server.bind(43278);
   });
 
-  it("should be able to parse a gmetric packet");
-
   it("should be able to send a complete gmetric packet");
+  // , function(done){
+  //   var server = dgram.createSocket('udp4');
+  //   var gmetric = new Gmetric();
+
+  //   server.on('message', function(msg, rinfo) {
+  //     var msg_type = msg.readInt32BE(0);
+  //     server.close();
+  //   });
+  //   server.on('listening', function(){
+  //     var metric = {
+  //       hostname: 'awesomehost.mydomain.com',
+  //       group: 'testgroup',
+  //       spoof: false,
+  //       units: 'widgets/sec',
+  //       slope: 'positive',
+
+  //       name: 'bestmetric',
+  //       value: 10,
+  //       type: 'int32'
+  //     };
+
+  //     gmetric.send('127.0.0.1', 43278, metric);
+  //   });
+  //   server.on('close', function() {
+  //     done();
+  //   });
+  //   server.bind(43278);
+  // });
+
+  it("should be able to send a spoofed gmetric packet");
   // , function(done){
   //   var server = dgram.createSocket('udp4');
   //   var gmetric = new Gmetric();
@@ -269,59 +303,4 @@ describe('gmetric', function() {
   //     done();
   //   });
   //   server.bind(43278);
-  // });
-
-  // it("should be able to generate a spoofed packet", function(done){
-  //   var gmetric = new Gmetric();
-  //   var spoofed_metric = {
-  //       hostname: 'awesomehost.mydomain.com',
-  //       group: 'testgroup',
-  //       spoof: true,
-  //       units: 'widgets/sec',
-  //       slope: 'positive',
-
-  //       name: 'bestmetric',
-  //       value: 10,
-  //       type: 'int32'
-  //   };
-  //   var packet = gmetric.pack(spoofed_metric);
-  //   packet.hostname.should.equal('awesomehost.mydomain.com');
-  //   packet.group.should.equal('testgroup');
-  //   packet.spoof.should.equal(1);
-  //   packet.units.should.equal('widgets/sec');
-  //   packet.slope.should.equal('positive');
-  //   packet.tmax.should.equal(60);
-  //   packet.dmax.should.equal(0);
-  //   packet.name.should.equal('bestmetric');
-  //   packet.value.should.equal(10);
-  //   packet.type.should.equal('int32');
-  //   done();
-  // });
-
-  // it("should be able to merge non-spoofed gmetric packets", function(done){
-  //   var gmetric = new Gmetric();
-  //   var spoofed_metric = {
-  //       hostname: 'awesomehost.mydomain.com.cool.omgosh.wtf',
-  //       group: 'testgroup',
-  //       spoof: false,
-  //       units: 'widgets/sec',
-  //       slope: 'positive',
-
-  //       name: 'bestmetric',
-  //       value: 10,
-  //       type: 'int32'
-  //   };
-  //   var packet = gmetric.pack(spoofed_metric);
-  //   packet.hostname.should.equal('awesomehost.mydomain.com.cool.omgosh.wtf');
-  //   packet.group.should.equal('testgroup');
-  //   packet.spoof.should.equal(0);
-  //   packet.units.should.equal('widgets/sec');
-  //   packet.slope.should.equal('positive');
-  //   packet.tmax.should.equal(60);
-  //   packet.dmax.should.equal(0);
-  //   packet.name.should.equal('bestmetric');
-  //   packet.value.should.equal(10);
-  //   packet.type.should.equal('int32');
-  //   done();
-  // });
 });
