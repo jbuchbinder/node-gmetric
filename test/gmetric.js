@@ -221,11 +221,129 @@ describe('gmetric', function() {
     done();
   });
 
-  it("should be able to parse a data packet");
+  it("should be able to unpack an integer", function(done){
+    var gmetric = new Gmetric();
+    var buffer = new Buffer(4);
+    var pos = gmetric.pack_int(buffer, 11, 0);
+    pos.should.equal(4);
+    var unpack = gmetric.unpack_int(buffer, 0);
+    unpack.pos.should.equal(4);
+    unpack.integer.should.equal(11);
+    done();
+  });
 
-  it("should be able to parse a meta packet");
+  it("should be able to unpack an boolean", function(done){
+    var gmetric = new Gmetric();
+    var buffer = new Buffer(4);
+    var pos = gmetric.pack_bool(buffer, true, 0);
+    pos.should.equal(4);
+    var unpack = gmetric.unpack_bool(buffer, 0);
+    unpack.pos.should.equal(4);
+    unpack.bool.should.equal(true);
 
-  it("should be able to parse a gmetric packet");
+    pos = gmetric.pack_bool(buffer, false, 0);
+    pos.should.equal(4);
+    unpack = gmetric.unpack_bool(buffer, 0);
+    unpack.pos.should.equal(4);
+    unpack.bool.should.equal(false);
+    done();
+  });
+
+  it("should be able to unpack a string", function(done){
+    var gmetric = new Gmetric();
+    var buffer = new Buffer(14);
+    var pos = gmetric.pack_string(buffer, 'awesome', 0);
+    pos.should.equal(14);
+    var unpack = gmetric.unpack_string(buffer, 0);
+    unpack.string.should.equal('awesome');
+    unpack.pos.should.equal(14);
+    done();
+  });
+
+  it("should be able to parse a data packet", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
+
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
+    };
+    var packet = gmetric.create_data(metric);
+    var data = gmetric.parse_data(packet);
+    data.hostname.should.equal('awesomehost.mydomain.com');
+    data.name.should.equal('bestmetric');
+    data.spoof.should.equal(true);
+    parseInt(data.value).should.equal(10);
+    done();
+  });
+
+  it("should be able to parse a meta packet", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
+      tmax: 60,
+      dmax: 180,
+
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
+    };
+    var packet = gmetric.create_meta(metric);
+    var meta = gmetric.parse_meta(packet);
+    meta.hostname.should.equal('awesomehost.mydomain.com');
+    meta.group.should.equal('testgroup');
+    meta.spoof.should.equal(true);
+    meta.type.should.equal('int32');
+    meta.units.should.equal('widgets/sec');
+    meta.slope.should.equal('positive');
+    meta.tmax.should.equal(60);
+    meta.dmax.should.equal(180);
+    done();
+  });
+
+  it("should be able to parse a gmetric packet", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
+      tmax: 60,
+      dmax: 180,
+
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
+    };
+    var packet = gmetric.pack(metric);
+
+    var meta = gmetric.unpack(packet.meta);
+    meta.hostname.should.equal('awesomehost.mydomain.com');
+    meta.group.should.equal('testgroup');
+    meta.spoof.should.equal(true);
+    meta.type.should.equal('int32');
+    meta.units.should.equal('widgets/sec');
+    meta.slope.should.equal('positive');
+    meta.tmax.should.equal(60);
+    meta.dmax.should.equal(180);
+
+    var data = gmetric.unpack(packet.data);
+    data.hostname.should.equal('awesomehost.mydomain.com');
+    data.name.should.equal('bestmetric');
+    data.spoof.should.equal(true);
+    parseInt(data.value).should.equal(10);
+    done();
+  });
 
   it("should be able to send a simple udp packet", function(done){
     var server = dgram.createSocket('udp4');
