@@ -23,7 +23,7 @@
   "readmeFilename": "README.md",
   "_id": "gmetric@0.1.0",
   "dist": {
-    "shasum": "de31af3bc1c02b34813c3eeefa311a19d86959c0"
+    "shasum": "cee56670b8dd21176f6b16a50180f083318305ab"
   },
-  "_from": "gmetric@0.0.x"
+  "_from": "gmetric@0.1.x"
 }

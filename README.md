@@ -7,3 +7,24 @@ NODE-GMETRIC
 
 Gmetric packet submission for node.js
 
+Usage
+------
+
+```javascript
+var Gmetric = require('gmetric');
+
+var gmetric = new Gmetric();
+var metric = {
+  hostname: 'awesomehost.mydomain.com',
+  group: 'testgroup',
+  spoof: true,
+  units: 'widgets/sec',
+  slope: 'positive',
+
+  name: 'bestmetric',
+  value: 10,
+  type: 'int32'
+};
+
+gmetric.send('127.0.0.1', 8659, metric);
+```
