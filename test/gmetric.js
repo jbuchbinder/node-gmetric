@@ -1,5 +1,4 @@
 var dgram = require('dgram');
-var events = require('events');
 
 var Gmetric = require('../lib/gmetric');
 
