@@ -1,10 +1,9 @@
 {
   "name": "gmetric",
   "description": "Ganglia gmetric submission for node.js",
-  "version": "0.1.0",
-  "authors": {
-    "name": "Jeff Buchbinder",
-    "name": "Josh Toft <joshtoft@gmail.com>"
+  "version": "0.1.1",
+  "author": {
+    "name": "Jeff Buchbinder"
   },
   "main": "./index.js",
   "directories": {
