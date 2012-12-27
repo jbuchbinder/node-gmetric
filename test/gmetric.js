@@ -59,7 +59,7 @@ describe('gmetric', function() {
     var gmetric = new Gmetric();
     var int_pos = gmetric.pack_int(buffer, 33, pos);
     int_pos.should.equal(11);
-    buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
+    buffer.toString('ascii', 0, teststring.length).should.equal(teststring);
     buffer.readInt32BE(teststring.length).should.equal(33);
     gmetric.pack_int(buffer, 47, pos);
     buffer.readInt32BE(teststring.length).should.equal(47);
@@ -72,7 +72,7 @@ describe('gmetric', function() {
     var pos = buffer.write(teststring);
     var gmetric = new Gmetric();
     gmetric.pack_int(buffer, undefined, pos);
-    buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
+    buffer.toString('ascii', 0, teststring.length).should.equal(teststring);
     buffer.readInt32BE(teststring.length).should.equal(0);
     gmetric.pack_int(buffer, null, pos);
     buffer.readInt32BE(teststring.length).should.equal(0);
@@ -85,7 +85,7 @@ describe('gmetric', function() {
     var pos = buffer.write(teststring);
     var gmetric = new Gmetric();
     var int_pos = gmetric.pack_bool(buffer, true, pos);
-    buffer.toString('utf-8', 0, teststring.length).should.equal(teststring);
+    buffer.toString('ascii', 0, teststring.length).should.equal(teststring);
     int_pos.should.equal(11);
     buffer.readInt32BE(teststring.length).should.equal(1);
     gmetric.pack_bool(buffer, false, pos);
@@ -100,7 +100,7 @@ describe('gmetric', function() {
     var int_pos = gmetric.pack_string(buffer, teststring, 0);
     int_pos.should.equal(20);
     buffer.readInt32BE(0).should.equal(teststring.length);
-    buffer.toString('utf-8', 4, 17).should.equal(teststring);
+    buffer.toString('ascii', 4, 17).should.equal(teststring);
     buffer[17].should.equal(0);
     buffer[18].should.equal(0);
     buffer[19].should.equal(0);
