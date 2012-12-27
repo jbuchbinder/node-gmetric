@@ -5,6 +5,10 @@
   "author": {
     "name": "Jeff Buchbinder"
   },
+  "maintainers": [
+    "jbuchbinder",
+    "seryl <joshtoft@gmail.com>"
+  ],
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
@@ -20,7 +24,7 @@
   },
   "readme": "[![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png)](http://travis-ci.org/jbuchbinder/node-gmetric)\nNODE-GMETRIC\n============\n\n* Module Name : gmetric\n* Website : https://github.com/jbuchbinder/node-gmetric\n\nGmetric packet submission for node.js\n\n",
   "readmeFilename": "README.md",
-  "_id": "gmetric@0.1.0",
+  "_id": "gmetric@0.1.1",
   "dist": {
     "shasum": "cee56670b8dd21176f6b16a50180f083318305ab"
   },
