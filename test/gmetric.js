@@ -28,7 +28,7 @@ describe('gmetric', function() {
 
   it("should generate the fill length for an xdr string", function(done) {
     var gmetric = new Gmetric();
-    gmetric.string_fill_length('awesome').should.equal(3);
+    gmetric.string_fill_length('awesome').should.equal(1);
     done();
   });
 
@@ -113,9 +113,9 @@ describe('gmetric', function() {
     var buffer = new Buffer(128);
     var gmetric = new Gmetric();
     var pos = gmetric.pack_string(buffer, longstring, 0);
-    pos.should.equal(22);
+    pos.should.equal(20);
     var pos = gmetric.pack_string(buffer, smallstring, pos);
-    pos.should.equal(37);
+    pos.should.equal(32);
     done();
   });
 
@@ -179,7 +179,7 @@ describe('gmetric', function() {
     };
     var meta = gmetric.create_meta(metric);
     meta.readInt32BE(0).should.equal(128);
-    meta.length.should.equal(147);
+    meta.length.should.equal(140);
     done();
   });
 
@@ -199,7 +199,7 @@ describe('gmetric', function() {
     var data = gmetric.create_data(metric);
     data.readInt32BE(0).should.equal(133);
     data.readInt32BE(4).should.equal(metric.hostname.length);
-    data.length.should.equal(74);
+    data.length.should.equal(68);
     done();
   });
 
@@ -217,8 +217,8 @@ describe('gmetric', function() {
       type: 'int32'
     };
     var packet = gmetric.pack(metric);
-    packet.meta.length.should.equal(147);
-    packet.data.length.should.equal(74);
+    packet.meta.length.should.equal(140);
+    packet.data.length.should.equal(68);
     done();
   });
 
@@ -252,12 +252,12 @@ describe('gmetric', function() {
 
   it("should be able to unpack a string", function(done){
     var gmetric = new Gmetric();
-    var buffer = new Buffer(14);
+    var buffer = new Buffer(12);
     var pos = gmetric.pack_string(buffer, 'awesome', 0);
-    pos.should.equal(14);
+    pos.should.equal(12);
     var unpack = gmetric.unpack_string(buffer, 0);
     unpack.string.should.equal('awesome');
-    unpack.pos.should.equal(14);
+    unpack.pos.should.equal(12);
     done();
   });
 
