@@ -1,7 +1,7 @@
 {
   "name": "gmetric",
   "description": "Ganglia gmetric submission for node.js",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": {
     "name": "Jeff Buchbinder"
   },
@@ -27,9 +27,9 @@
   },
   "readme": "[![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png)](http://travis-ci.org/jbuchbinder/node-gmetric)\nNODE-GMETRIC\n============\n\n* Module Name : gmetric\n* Website : https://github.com/jbuchbinder/node-gmetric\n\nGmetric packet submission for node.js\n\n",
   "readmeFilename": "README.md",
-  "_id": "gmetric@0.1.3",
+  "_id": "gmetric@0.2.0",
   "dist": {
-    "shasum": "09c27846c00cd9cbd2dbcd661349757cce1cf86b"
+    "shasum": "9b62922877725fa7d48cd6f451271cc702139bc2"
   },
   "_from": "gmetric@0.1.x"
 }
