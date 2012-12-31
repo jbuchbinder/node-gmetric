@@ -163,6 +163,69 @@ describe('gmetric', function() {
     done();
   });
 
+  it("should return an empty list of extra elements", function(done){
+    var gmetric = new Gmetric();
+    gmetric.extra_elements({}).should.have.length(0);
+    done();
+  });
+
+  it("should return an empty list of extra elements2", function(done){
+    var gmetric = new Gmetric();
+    gmetric.extra_elements({}).should.have.length(0);
+    done();
+  });
+
+  it("should be able to return a list of extra elements", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+        hostname: 'awesomehost.mydomain.com',
+        spoof: false,
+        units: 'widgets/sec',
+        slope: 'positive',
+
+        name: 'bestmetric',
+        value: 10,
+        type: 'int32'
+      };
+    gmetric.extra_elements(metric).should.have.length(0);
+    done();
+  });
+
+  it("should be able to return a list of extra elements", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+        hostname: 'awesomehost.mydomain.com',
+        group: 'testgroup',
+        spoof: false,
+        units: 'widgets/sec',
+        slope: 'positive',
+
+        name: 'bestmetric',
+        value: 10,
+        type: 'int32'
+      };
+    gmetric.extra_elements(metric).should.have.length(1);
+    done();
+  });
+
+  it("should be able to return a list of extra elements2", function(done){
+    var gmetric = new Gmetric();
+    var metric = {
+        hostname: 'awesomehost.mydomain.com',
+        group: 'testgroup',
+        spoof: false,
+        units: 'widgets/sec',
+        slope: 'positive',
+
+        name: 'bestmetric',
+        description: 'The best description ever ever',
+        value: 10,
+        type: 'int32'
+      };
+    gmetric.extra_elements(metric).should.have.length(2);
+    done();
+  });
+
   it("should be able to create a gmetric meta packet", function(done){
     var gmetric = new Gmetric();
     var metric = {
