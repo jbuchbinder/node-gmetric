@@ -55,7 +55,8 @@ Receiving and unpacking metrics
 -------------------------------
 
 ```javascript
-var dgram = require('dgram'),
+var util = require('util'),
+    dgram = require('dgram'),
     server = dgram.createSocket('udp4');
 
 var Gmetric = require('gmetric'),
