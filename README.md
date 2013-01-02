@@ -15,7 +15,7 @@ var Gmetric = require('gmetric');
 
 var gmetric = new Gmetric();
 var metric = {
-  hostname: 'awesomehost.mydomain.com',
+  hostname: '192.168.20.15:awesomehost.mydomain.com',
   group: 'testgroup',
   spoof: true,
   units: 'widgets/sec',
