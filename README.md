@@ -8,10 +8,9 @@ NODE-GMETRIC
 Gmetric packet submission for node.js
 
 Usage
-=====
+-----
 
-Unspoofed
----------
+### Unspoofed
 
 ```javascript
 var Gmetric = require('gmetric');
@@ -31,8 +30,7 @@ var metric = {
 gmetric.send('127.0.0.1', 8659, metric);
 ```
 
-Spoofed
--------
+### Spoofed
 
 ```javascript
 var Gmetric = require('gmetric');
