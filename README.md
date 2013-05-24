@@ -1,5 +1,4 @@
-[![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png)](http://travis-ci.org/jbuchbinder/node-gmetric)
-node-gmetric
+node-gmetric [![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png)](http://travis-ci.org/jbuchbinder/node-gmetric)
 ============
 
 * Module Name : gmetric
