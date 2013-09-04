@@ -1,13 +1,11 @@
-node-gmetric [![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png?branch=master)](http://travis-ci.org/jbuchbinder/node-gmetric)
-============
+# node-gmetric [![build status](https://secure.travis-ci.org/jbuchbinder/node-gmetric.png?branch=master)](http://travis-ci.org/jbuchbinder/node-gmetric)
 
 * Module Name : gmetric
 * Website : https://github.com/jbuchbinder/node-gmetric
 
 Gmetric packet submission for node.js
 
-Sending metrics
----------------
+## Sending metrics
 
 ### Unspoofed
 
@@ -50,8 +48,7 @@ var metric = {
 gmetric.send('127.0.0.1', 8649, metric);
 ```
 
-Receiving and unpacking metrics
--------------------------------
+## Receiving and unpacking metrics
 
 ```javascript
 var util = require('util'),
@@ -80,3 +77,27 @@ server.on('listening', function(){
 
 server.bind(8649);
 ```
+
+## License
+
+```
+Copyright Jeff Buchbinder, and other contributors. All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+```
+
