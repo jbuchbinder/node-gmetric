@@ -541,4 +541,36 @@ describe('gmetric', function() {
     });
     server.bind(43278);
   });
+
+  it("should be able to trap DNS error on socket level", function(done){
+    var gmetric = new Gmetric();
+    var socket = gmetric.getSocket();
+    var metric = {
+      hostname: 'awesomehost.mydomain.com',
+      group: 'testgroup',
+      spoof: true,
+      units: 'widgets/sec',
+      slope: 'positive',
+      tmax: 60,
+      dmax: 180,
+
+      name: 'bestmetric',
+      value: 10,
+      type: 'int32'
+    };
+
+    var sentDone = false
+
+    socket.on('error', function(e){
+      e.code.should.equal('ENOTFOUND')
+      if (!sentDone) {
+        done();
+        sentDone = true;
+      }
+    });    
+
+    gmetric.send('THIS IS A COMPLETELY INVALID BOGUS HOSTNAME', 65530, metric);
+  });
+
+
 });
